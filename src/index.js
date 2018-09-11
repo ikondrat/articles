@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Articles from './containers/Articles/';
-import Article from './containers/Article/';
+import Home from './pages/Home';
+import Article from './pages/Article';
 import registerServiceWorker from './registerServiceWorker';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {
   BrowserRouter as Router,
   Route
@@ -17,16 +16,13 @@ const store = middleware()
 
 ReactDOM.render(
   <Provider store={store}>
-    <MuiThemeProvider>
-      <Router>
-        <div>
-          <Route exact path="/" component={Articles}/>
-          <Route path="/articles/:articleId" render={({match}) => {
-            return <Article {...match}/>;
-          }}/>
-        </div>
-      </Router>
-    </MuiThemeProvider>
+    <Router>
+      <div>
+        <Route exact path="/" component={Home}/>
+        <Route path="/search" component={Home}/>
+        <Route path="/articles/:articleId" component={Article}/>
+      </div>
+    </Router>
   </Provider>, 
   document.getElementById('root')
 );

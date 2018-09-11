@@ -7,11 +7,20 @@ export const RECEIVE_ARTICLE = 'RECEIVE_ARTICLE'
 export const TOGGLE_ARTICLE= 'TOGGLE_ARTICLE'
 export const INVALIDATE_ARTICLE= 'INVALIDATE_ARTICLE'
 
-const apiURL = 'https://hn.algolia.com/api/v1/';
+export const REQUEST_PAGE = 'REQUEST_PAGE'
+export const RECIEVE_PAGE = 'RECIEVE_PAGE'
+
+const apiURL = 'https://hn.algolia.com/api/v1';
 
 function requestArticles() {
   return {
     type: REQUEST_ARTICLES
+  }
+}
+
+function requestPage() {
+  return {
+    type: REQUEST_PAGE
   }
 }
 
@@ -32,6 +41,16 @@ function receiveArticles(articles) {
   }
 }
 
+function receivePage(articles, prevList) {
+  return {
+    type: RECIEVE_PAGE,
+    articles: [...prevList, ...articles.hits],
+    page: articles.page,
+    pages: articles.nbPages,
+    receivedAt: Date.now()
+  }
+}
+
 function receiveArtice(articleId, json) {
   return {
     type: RECEIVE_ARTICLE,
@@ -41,10 +60,16 @@ function receiveArtice(articleId, json) {
   }
 }
 
-function fetchArticles(q="") {
+export function fetchArticles(params=null) {
   return dispatch => {
     dispatch(requestArticles())
-    const query = q.length > 0 ? `${apiURL}/search?query=${q}` : `${apiURL}/search`;
+    let query = `${apiURL}/search`;
+    if (params != null) {
+      Object.keys(params).forEach((key, i) => {
+        query += i > 0 ? '&' : '?';
+        query += `${key}=${params[key]}`;
+      })
+    }
     return fetch(query)
       .then((response, data) => {
         return response.json()
@@ -53,7 +78,26 @@ function fetchArticles(q="") {
   }
 }
 
-function fetchArticle(articleId) {
+export function fetchMore(params={page: 0}) {
+
+  return (dispatch, getState) => {
+    dispatch(requestPage())
+    let query = `${apiURL}/search`;
+    params.page += 1; 
+    Object.keys(params).forEach((key, i) => {
+      query += i > 0 ? '&' : '?';
+      query += `${key}=${params[key]}`;
+    });
+    const { articles } = getState();
+    return fetch(query)
+      .then((response, data) => {
+        return response.json()
+      })
+      .then(json => dispatch(receivePage(json, articles.list)))
+  }
+}
+
+export function fetchArticle(articleId) {
   return dispatch => {
     dispatch(requestArticle(articleId))
     return fetch(`${apiURL}/items/${articleId}`)
@@ -61,37 +105,5 @@ function fetchArticle(articleId) {
         return response.json();
       })
       .then(json => dispatch(receiveArtice(articleId, json)))
-  }
-}
-
-function shouldfetchArticles(state) {
-  return state.articles && state.articles.length > 9 ? false : true;
-}
-
-export function fetchArticleIfNeeded(articleId) {
-  return (dispatch, getState) => {
-    return dispatch(fetchArticle(articleId))
-  }
-}
-
-
-export function fetchArticlesIfNeeded() {
-  return (dispatch, getState) => {
-    const state = getState();
-    if (shouldfetchArticles(state)) {
-      return dispatch(fetchArticles())
-    } else {
-      return dispatch(receiveArticles(state.articles))
-    }
-  }
-}
-
-export function fetchNextPage(currentPage) {
-  alert('fetch next page here');
-}
-
-export function fetchArticlesByText(q) {
-  return (dispatch, getState) => {
-    return dispatch(fetchArticles(q))
   }
 }

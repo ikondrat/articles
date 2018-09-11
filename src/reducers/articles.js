@@ -1,22 +1,23 @@
 import {
   REQUEST_ARTICLES,
-  RECEIVE_ARTICLES
+  RECEIVE_ARTICLES,
+  REQUEST_PAGE,
+  RECIEVE_PAGE
 } from '../actions'
 
 const articles = (state = {
   isFetching: false,
-  list: [],
-  pages: 0,
-  page: 0,
+  list: []
 }, action) => {
   switch (action.type) {
     case REQUEST_ARTICLES:
+    case REQUEST_PAGE:
       return {
         ...state,
-        isFetching: true,
-        list: []
+        isFetching: true
       };
     case RECEIVE_ARTICLES:
+    case RECIEVE_PAGE:
       return {
         ...state,
         isFetching: false,

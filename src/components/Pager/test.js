@@ -1,23 +1,17 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Article from './';
+import Pager from '.';
 
 it('renders correctly', () => {
   const wrapper = shallow(
-    <Article 
-      title="test title"
-      isFetching={true}
-    />
+      <Pager page={0} pages={10}/>
   );
   expect(wrapper).toMatchSnapshot();
 });
 
-it('renders correctly', () => {
+it('renders correctly on last page', () => {
   const wrapper = shallow(
-    <Article 
-      title="test title"
-      isFetching={false}
-    />
+      <Pager page={9} pages={10}/>
   );
   expect(wrapper).toMatchSnapshot();
 });
