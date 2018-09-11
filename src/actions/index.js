@@ -87,7 +87,7 @@ export function fetchArticlesIfNeeded() {
 }
 
 export function fetchNextPage(currentPage) {
-  
+  alert('fetch next page here');
 }
 
 export function fetchArticlesByText(q) {
