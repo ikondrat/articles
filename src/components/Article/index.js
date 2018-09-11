@@ -3,18 +3,21 @@ import {Card, CardText} from 'material-ui/Card';
 import PropTypes from 'prop-types';
 
 const Article = ({
-  title
+  title,
+  url
 }) => (
   <Card>
     <CardText>
-      {title}
+      <h1>{title}</h1>
+      <a href={url}>{url}</a>
     </CardText>
   </Card>
 );
 
 
 Article.propTypes = {
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired
 };
 
 

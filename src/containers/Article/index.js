@@ -16,7 +16,7 @@ class ArtilceContainer extends Component {
   }
 
   render() {
-    const { article, isFetching, lastUpdated } = this.props
+    const { articleDetails, isFetching, lastUpdated } = this.props
     return (
       <div>
         <div className="card">
@@ -24,16 +24,16 @@ class ArtilceContainer extends Component {
             {lastUpdated &&
               <h2>Films</h2>
             }
-            {isFetching && article === null &&
+            {isFetching && articleDetails === null &&
               <Progress/>
             }
-            {!isFetching && article === null &&
+            {!isFetching && articleDetails === null &&
               <h2>Empty.</h2>
             }
-            {article &&
+            {articleDetails &&
               <div style={{ opacity: isFetching ? 0.5 : 1 }}>
                 <Article 
-                  {...article}
+                  {...articleDetails}
                 />
               </div>
             }
@@ -45,14 +45,14 @@ class ArtilceContainer extends Component {
 }
 
 ArtilceContainer.propTypes = {
-  article: PropTypes.object,
+  articleDetails: PropTypes.object,
   isFetching: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state) {
   return {
-    ...state.articleDetails
+    ...state.article
   };
 }
 
